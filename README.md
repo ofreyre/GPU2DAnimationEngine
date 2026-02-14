@@ -16,8 +16,8 @@ Demo path: Assets/_App/Demo00/Scenes/SampleScene
 
 ## Demos
 GPUAnimationData custom inspector  
-[![Anti tiling and tiles blending](https://img.youtube.com/vi/O4xx1kKgA30/0.jpg)](https://youtu.be/O4xx1kKgA30)  
+[![Anti tiling and tiles blending](https://img.youtube.com/vi/WyjpnOaPc7E/0.jpg)](https://youtube.com/shorts/WyjpnOaPc7E)  
 
 50 and 3000 instances of animated characters  
-[![Anti tiling and tiles blending](https://img.youtube.com/vi/WyjpnOaPc7E/0.jpg)](https://youtube.com/shorts/WyjpnOaPc7E)
+[![Anti tiling and tiles blending](https://img.youtube.com/vi/O4xx1kKgA30/0.jpg)](https://youtu.be/O4xx1kKgA30)
 

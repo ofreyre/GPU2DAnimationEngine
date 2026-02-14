@@ -1,0 +1,73 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+
+struct EntityProps
+{
+    float walkSpeed;
+    float runSpeed;
+    float life;
+};
+
+struct EntityInstanceProps
+{
+    float3 direction;
+};
+
+struct EntityInstance
+{
+    uint entityI;
+    uint currentClipI;
+    float4 transformWS;
+    float time;
+};
+
+RWStructuredBuffer<EntityInstance> entityInstances;
+StructuredBuffer<EntityInstanceProps> entityProps;
+StructuredBuffer<EntityInstanceProps> entityInstancesProps;
+uint entityInstancesC;
+float4 viewRect;
+float deltaTime;
+
+[numthreads(512,1,1)]
+void CSMain (uint3 entityInstanceI : SV_DispatchThreadID)
+{
+    if(entityInstanceI.x < entityInstancesC)
+    {
+        EntityInstance entityInstance = entityInstances[entityInstanceI.x];
+        EntityInstanceProps eiProps = entityInstancesProps[entityInstanceI.x];
+        EntityProps eProps = entityProps[entityInstance.entityI];
+
+        if (entityInstance.currentClipI == 0)
+        {
+            entityInstance.transformWS.xyz += eiProps.direction * eProps.walkSpeed * deltaTime;
+        }
+        else if (entityInstance.currentClipI == 1)
+        {
+            entityInstance.transformWS.xyz += eiProps.direction * eProps.runSpeed * deltaTime;
+        }
+
+        if (entityInstance.transformWS.x < viewRect.x)
+        {
+            entityInstance.transformWS.x = viewRect.z;
+        }
+        else if (entityInstance.transformWS.x > viewRect.z)
+        {
+            entityInstance.transformWS.x = viewRect.x;
+        }
+
+        if (entityInstance.transformWS.y < viewRect.y)
+        {
+            entityInstance.transformWS.y = viewRect.w;
+        }
+        else if (entityInstance.transformWS.y > viewRect.w)
+        {
+            entityInstance.transformWS.y = viewRect.y;
+        }
+
+        entityInstances[entityInstanceI.x] = entityInstance;
+    }
+}

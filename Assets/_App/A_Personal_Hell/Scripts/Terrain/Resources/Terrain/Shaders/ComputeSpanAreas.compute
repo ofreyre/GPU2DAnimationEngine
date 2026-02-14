@@ -1,0 +1,45 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWStructuredBuffer<float> map;
+
+uint m_sideLength;
+float2 projectilesCenter;
+float projectilesRadius;
+float projectilesMargin;
+float projectilesFrequence;
+float2 lifesCenter;
+float lifesRadius;
+float lifesMargin;
+float lifesFrequence;
+float2 speedsCenter;
+float speedsRadius;
+float speedsMargin;
+float speedsFrequence;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float2 v = float2(id.xy) - float2(projectilesCenter);
+    float a = atan2(v.y, v.x);
+    float projectilesCos = cos(a * projectilesFrequence);
+
+    v = float2(id.xy) - float2(lifesCenter);
+    a = atan2(v.y, v.x);
+    float lifesCos = cos(a * lifesFrequence + 0.75);
+
+    v = float2(id.xy) - float2(speedsCenter);
+    a = atan2(v.y, v.x);
+    float speedsCos = cos(a * speedsFrequence + 2.5);
+
+    if (
+        distance(projectilesCenter, id.xy) < projectilesRadius + projectilesMargin * projectilesCos
+        || distance(lifesCenter, id.xy) < lifesRadius + lifesMargin * lifesCos
+        || distance(speedsCenter, id.xy) < speedsRadius + speedsMargin * speedsCos
+    )
+    {
+        map[id.x + id.y * m_sideLength] = 0;
+    }
+}

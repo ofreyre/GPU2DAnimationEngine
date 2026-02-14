@@ -1,0 +1,38 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWStructuredBuffer<float> map;
+uint m_sideLength;
+uint limitsWidth;
+uint limitsRange;
+float rndSeed;
+
+float RND(float seed1, float seed2)
+{
+    // Combine seeds into a single value
+    float combinedSeed = sin(dot(float2(seed1, seed2), float2(12.9898, 78.233))) * 43758.5453;
+
+    // Return a value between 0 and 1
+    return frac(combinedSeed);
+}
+
+float RandomRange(float min, float max, float seed1, float seed2)
+{
+    float r = RND(seed1, seed2);
+    return min + (max - min) * r;
+}
+
+[numthreads(8,8,1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x < m_sideLength && id.y < m_sideLength) {
+        uint rndX = (RandomRange(0, limitsRange, id.y, rndSeed) + RandomRange(0, 4, id.y - 1, rndSeed) + RandomRange(0, 4, id.y + 1, rndSeed)) / 3.0;
+        uint rndY = (RandomRange(0, limitsRange, id.x, rndSeed) + RandomRange(0, 4, id.x - 1, rndSeed) + RandomRange(0, 4, id.x + 1, rndSeed)) / 3.0;
+        if (id.x <= limitsWidth + rndX || id.x >= m_sideLength - limitsWidth - rndX || id.y <= limitsWidth + rndY || id.y >= m_sideLength - limitsWidth - rndY)
+        {
+            map[id.x + id.y * m_sideLength] = 1;
+        }
+    }
+}

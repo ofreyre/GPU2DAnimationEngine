@@ -1,0 +1,61 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWStructuredBuffer<uint> terrain;
+StructuredBuffer<float> map;
+StructuredBuffer<uint> spritesTiles;
+uint m_sideLength;
+float grassProb;
+
+uint brushes[] = {
+    0x08,   //0b00001000
+    0x0C,   //0b00001100
+    0x04,   //0b00000100
+    0x0A,   //0b00001010
+    0x05,   //0b00000101
+    0x02,   //0b00000010
+    0x03,   //0b00000011
+    0x01    //0b00000001
+};
+
+int2 neighborhood[] = {
+    int2(-1, 1),
+    int2(0, 1),
+    int2(1, 1),
+    int2(-1, 0),
+    int2(1, 0),
+    int2(-1, -1),
+    int2(0, -1),
+    int2(1, -1)
+};
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    uint index = id.x + id.y * m_sideLength;
+    if (map[index] < grassProb) {
+        terrain[index] = 15;
+    }
+    else {
+        uint tileID = 0;
+
+        for (uint k = 0; k < 8; k++)
+        {
+            int i0 = id.x + neighborhood[k].x;
+            if (i0 >= 0 && uint(i0) < m_sideLength)
+            {
+                int j0 = id.y + neighborhood[k].y;
+                if (j0 >= 0 && uint(j0) < m_sideLength)
+                {
+                    if (map[uint(i0) + uint(j0) * m_sideLength] < grassProb)
+                    {
+                        tileID = tileID | brushes[k];
+                    }
+                }
+            }
+        }
+        terrain[index] = spritesTiles[tileID];
+    }
+}

@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11c35a9e84c80f64ca6ecd4717503226, type: 3}
+  m_Name: TerrainSettings
+  m_EditorClassIdentifier: 
+  m_rendertexture: {fileID: 0}
+  m_mapPower_2: 9
+  m_limitsWidth: 4
+  m_limitsRange: 3
+  m_tiles:
+  - {fileID: -1963502993, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: -2034418160, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1681500530, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 940410526, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 207800331, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1963502993, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -676406121, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 284253116, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1224337097, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1122893352, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1614718046, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1575682546, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 44926458, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 277192877, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 2054662977, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -978495706, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1396274266, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -2034418160, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1681500530, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 940410526, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 207800331, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1963502993, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -676406121, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 284253116, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1224337097, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1122893352, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1614718046, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1575682546, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 44926458, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 277192877, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 2054662977, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -978495706, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1396274266, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1681500530, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 207800331, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 284253116, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 1224337097, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 1575682546, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: -1396274266, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: -2034418160, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 1122893352, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: -676406121, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: -1614718046, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 940410526, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 44926458, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 277192877, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: 2054662977, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: -978495706, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  - {fileID: -978495706, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 2054662977, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 44926458, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 277192877, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1614718046, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1963502993, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1575682546, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 940410526, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 284253116, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -2034418160, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -1681500530, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 207800331, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1224337097, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: 1122893352, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -676406121, guid: 5cd807dcb6dfa8047a863bc72776342b, type: 3}
+  - {fileID: -978495706, guid: 57f66e7492f6ed8419d4e9caaa328f5f, type: 3}
+  m_material: {fileID: 0}
+  m_grassProb: 0.3
+  m_bkgSprites:
+  - {fileID: -419836145, guid: 0e0ce3a89a5c3ec40bacb7ecd5bf49f4, type: 3}
+  - {fileID: 351896505, guid: 0e0ce3a89a5c3ec40bacb7ecd5bf49f4, type: 3}
+  - {fileID: 57459085, guid: 0e0ce3a89a5c3ec40bacb7ecd5bf49f4, type: 3}
+  - {fileID: 1708177178, guid: 0e0ce3a89a5c3ec40bacb7ecd5bf49f4, type: 3}
+  m_bkgMaterial: {fileID: 0}
+  m_bkgLength: 8
+  m_coputeTerrain1: {fileID: 7200000, guid: b829e555008198247a80c811fb71444d, type: 3}
+  m_coputeTerrain2: {fileID: 7200000, guid: 398fe462533de0a44b0b734442673658, type: 3}
+  m_computeSpanAreas: {fileID: 7200000, guid: e1f3aa753fe130e44a49bfe8ad7a3437, type: 3}
+  m_computeLimits: {fileID: 7200000, guid: 70aa73aaec5f87a46a0d791962127649, type: 3}
+  m_computeTiles: {fileID: 7200000, guid: 0b3d6f16ead69f24399dc9719e5fae8e, type: 3}
+  m_projectilesCenter: {x: 256, y: 256, z: 0}
+  m_projectilesRadius: 12
+  m_projectilesMargin: 1
+  m_projectilesFrequence: 10
+  m_lifesCenter: {x: 100, y: 100, z: 0}
+  m_lifesRadius: 12
+  m_lifesMargin: 1
+  m_lifesFrequence: 10
+  m_speedsCenter: {x: 430, y: 430, z: 0}
+  m_speedsRadius: 12
+  m_speedsMargin: 1
+  m_speedsFrequence: 10
+  m_noTreeFactor: 1.1
+  m_margin: 20
+  m_density: 3
+  SideLength: 513
+  BKGSideLength: 64
+  TerrainBkgCount: 4096
+  MapTilesCount: 263169
+  TerrainCount: 263169
+  m_foldoutTerrain: 1
+  m_foldoutCollectables: 1
+  m_foldoutWoods: 0
+  m_foldoutTiles: 1
+  m_foldoutTerrainPreview: 1
+  m_textureGenerated: 1

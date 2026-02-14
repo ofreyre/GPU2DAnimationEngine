@@ -1,0 +1,173 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+struct Entity
+{
+    uint nodesC;
+    uint clipsStartI;
+};
+
+struct Clip
+{
+    uint frameStartI;
+    uint framesC;
+    float frameDuration;
+};
+
+struct Sprite
+{
+    uint textureI;
+    float2 uv;
+    float2 sizeuv;
+};
+
+struct Frame
+{
+    float3x3 transformOS;
+    uint spriteI;
+};
+
+struct EntityInstance
+{
+    uint entityI;
+    uint currentClipI;
+    float3 transformWS;
+    float time;
+};
+
+struct NodeInstance
+{
+    uint entityInstanceI;
+    uint order;
+};
+
+Texture2DArray<float4> srcTextures;
+RWTexture2D<float4> Result;
+StructuredBuffer<Entity> entities;
+StructuredBuffer<Clip> clips;
+StructuredBuffer<Sprite> sprites;
+StructuredBuffer<Frame> frames;
+StructuredBuffer<EntityInstance> entityInstances;
+StructuredBuffer<NodeInstance> nodeInstances;
+StructuredBuffer<float4> clipRects;
+uint2 srcTexSize;
+uint2 tarTexSize;
+uint nodeInstancesC;
+float4 bkgColor;
+float time;
+
+float cross2x2(float2 a, float2 b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+
+float2x2 inverse2x2(float2x2 m)
+{
+    float det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+
+    /*
+    // Asegurarse de que el determinante no sea cero
+    if (abs(det) < 1e-6)
+    {
+        // En caso de que el determinante sea cero, la matriz no es invertible.
+        // Retorna la matriz identidad como un caso seguro (o puedes manejar el error de otra forma).
+        return float2x2(1, 0, 0, 1);
+    }
+    */
+
+    float invDet = 1.0 / det;
+
+    float2x2 inv;
+    inv[0][0] = m[1][1] * invDet;
+    inv[0][1] = -m[0][1] * invDet;
+    inv[1][0] = -m[1][0] * invDet;
+    inv[1][1] = m[0][0] * invDet;
+
+    return inv;
+}
+
+[numthreads(32,32,1)]
+void CSMain (uint3 texCoord : SV_DispatchThreadID)
+{
+    if (texCoord.x < tarTexSize.x && texCoord.y < tarTexSize.y)
+    {   
+        Result[texCoord.xy] = bkgColor;
+        float3 p_lb = float3(0, 0, 1);
+        float3 p_lt = float3(0, 1, 1);
+        float3 p_rt = float3(1, 1, 1);
+        float3 p_rb = float3(1, 0, 1);
+        
+        for (uint nodeInstanceI = 0; nodeInstanceI < nodeInstancesC; nodeInstanceI++)
+        {
+            NodeInstance nodeInstance = nodeInstances[nodeInstanceI];
+            EntityInstance entityInstance = entityInstances[nodeInstance.entityInstanceI];
+            Entity entity = entities[entityInstance.entityI];
+            Clip clip = clips[entity.clipsStartI + entityInstance.currentClipI];
+
+            float4 clipRect = clipRects[entity.clipsStartI + entityInstance.currentClipI];
+            float3 rectOffset = float3(-clipRect.x, -clipRect.y, 0);
+            float3 rectScale = float3(
+                tarTexSize.x / clipRect.z,
+                tarTexSize.y / clipRect.w,
+                1
+                );
+
+            int frameI = uint(time / clip.frameDuration) % clip.framesC;
+            int frameNodeI = clip.frameStartI + frameI * entity.nodesC + nodeInstance.order;
+            Frame frame = frames[frameNodeI];
+
+            float3 v_lb = (mul(frame.transformOS, p_lb) + rectOffset) * rectScale;
+            float3 v_lt = (mul(frame.transformOS, p_lt) + rectOffset) * rectScale;
+            float3 v_rt = (mul(frame.transformOS, p_rt) + rectOffset) * rectScale;
+            float3 v_rb = (mul(frame.transformOS, p_rb) + rectOffset) * rectScale;
+
+            /*
+            **  B--C
+            **  |  |
+            **  A--D
+            */
+
+            float2 ab = v_lt.xy - v_lb.xy;
+            float2 bc = v_rt.xy - v_lt.xy;
+            float2 cd = v_rb.xy - v_rt.xy;
+            float2 da = v_lb.xy - v_rb.xy;
+
+            float2 ap = float2(texCoord.xy) - v_lb.xy;
+            float2 bp = float2(texCoord.xy) - v_lt.xy;
+            float2 cp = float2(texCoord.xy) - v_rt.xy;
+            float2 dp = float2(texCoord.xy) - v_rb.xy;
+
+            float cross1 = cross2x2(ab, ap);
+            float cross2 = cross2x2(bc, bp);
+            float cross3 = cross2x2(cd, cp);
+            float cross4 = cross2x2(da, dp);
+            
+
+            //if (float(texCoord.x) < float(v_rt.x * 50) && float(texCoord.y) < float(v_rt.y * 50))
+
+            if (
+                (cross1 >= 0 && cross2 >= 0 && cross3 >= 0 && cross4 >= 0) ||
+                (cross1 <= 0 && cross2 <= 0 && cross3 <= 0 && cross4 <= 0)
+                )
+            {
+                float2x2 m = {
+                    -da.x, ab.x,
+                    -da.y, ab.y
+                };
+
+                m = inverse2x2(m);
+                float2 normXY = mul(m, texCoord.xy - v_lb.xy);
+                Sprite sprite = sprites[frame.spriteI];
+                float2 uv = sprite.uv + normXY * sprite.sizeuv;
+                float2 texXY = uv * srcTexSize;
+                //float4 color = srcTexture[texXY];
+
+                float4 color = srcTextures[uint3(texXY.x, texXY.y, sprite.textureI)];
+
+                if (color.a > 0.01)
+                    Result[texCoord.xy] = color;
+                //Result[texCoord.xy] = float4(1, 0, 0, 1);
+            }
+        }
+    }
+}

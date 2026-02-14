@@ -1,0 +1,90 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+struct Entity
+{
+    uint nodesC;
+    uint clipsStartI;
+};
+
+struct Clip
+{
+    uint frameStartI;
+    uint framesC;
+    float frameDuration;
+};
+
+struct Frame
+{
+    float3x3 transformOS;
+    uint spriteI;
+};
+
+struct EntityInstance
+{
+    uint entityI;
+    uint currentClipI;
+    float4 transformWS;
+    float time;
+};
+
+struct NodeInstance
+{
+    uint entityInstanceI;
+    uint order;
+};
+
+struct EntityInstanceProps
+{
+    float3 direction;
+};
+
+struct NodeInstanceFrame
+{
+    uint spriteI;
+    float3x3 transformOS;
+    float flip;
+};
+
+StructuredBuffer<Entity> entities;
+StructuredBuffer<Clip> clips;
+StructuredBuffer<Frame> frames;
+StructuredBuffer<EntityInstance> entityInstances;
+StructuredBuffer<NodeInstance> nodeInstances;
+RWStructuredBuffer<NodeInstanceFrame> nodeInstancesFrame;
+StructuredBuffer<EntityInstanceProps> entityInstancesProps;
+
+uint nodeInstancesC;
+float time;
+
+[numthreads(512, 1, 1)]
+void CSMain (uint3 nodeInstanceI : SV_DispatchThreadID)
+{
+    if (nodeInstanceI.x < nodeInstancesC)
+    {
+        NodeInstance nodeInstance = nodeInstances[nodeInstanceI.x];
+        EntityInstance entityInstance = entityInstances[nodeInstance.entityInstanceI];
+        Entity entity = entities[entityInstance.entityI];
+        Clip clip = clips[entity.clipsStartI + entityInstance.currentClipI];
+
+        uint frameI = uint(time / clip.frameDuration) % clip.framesC;
+        uint frameNodeI = clip.frameStartI + frameI * entity.nodesC + nodeInstance.order;
+        Frame frame = frames[frameNodeI];
+
+        NodeInstanceFrame nodeInstanceFrame;
+        nodeInstanceFrame.spriteI = frame.spriteI;
+        nodeInstanceFrame.transformOS = frame.transformOS;
+
+        EntityInstanceProps eiProps = entityInstancesProps[nodeInstance.entityInstanceI];
+        if (eiProps.direction.x >= 0)
+        {
+            nodeInstanceFrame.flip = 1;
+        }
+        else
+        {
+            nodeInstanceFrame.flip = -1;
+        }        
+
+        nodeInstancesFrame[nodeInstanceI.x] = nodeInstanceFrame;
+    }
+}

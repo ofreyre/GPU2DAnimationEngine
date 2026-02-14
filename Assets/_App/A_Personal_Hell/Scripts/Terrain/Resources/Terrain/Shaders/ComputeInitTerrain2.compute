@@ -1,0 +1,81 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWStructuredBuffer<float> map;
+
+
+uint sideLength;
+uint m_sideLength;
+uint randomLength;
+uint halfSide;
+float randomRange;
+uint2 mapMin;
+uint2 mapMax;
+float variation;
+float rndSeed;
+
+float RND(int seed1, int seed2, float seed3)
+{
+    // Combine seeds into a single value
+    float combinedSeed = sin(dot(float3(seed1, seed2, seed3), float3(12.9898, 78.233, 45.164))) * 43758.5453;
+    
+    // Return a value between 0 and 1
+    return frac(combinedSeed);
+}
+
+float RandomRange(float min, float max, int seed1, int seed2, float seed3)
+{
+    float r = RND(seed1, seed2, seed3);
+    return min + (max - min) * r;
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    uint x = id.x * halfSide;
+    uint m0 = (x + halfSide) % sideLength;
+    uint y = m0 + id.y * sideLength;
+    
+    //if (id.x >= mapMin.x && id.x < mapMax.x && id.y >= m0 && id.y < mapMax.y && distance(playerCenter, id.xy) < playerRadius)
+    if (id.x >= mapMin.x && id.x < mapMax.x && id.y >= mapMin.y && y < m_sideLength - 1)
+    {
+        if (sideLength > randomLength)
+        {
+            map[x + halfSide + (y + halfSide) * m_sideLength] = RandomRange(0, randomRange, id.x, id.y, rndSeed);
+            if (x == 0)
+                map[m_sideLength - 1 + y * m_sideLength] = RandomRange(0, randomRange, id.x, id.y, rndSeed);
+            if (y == 0)
+                map[x + (m_sideLength - 1) * m_sideLength] = RandomRange(0, randomRange, id.x, id.y, rndSeed);
+        }
+        else
+        {
+                        //x, y is center of diamond
+                        //note we must use mod  and add DATA_SIZE for subtraction 
+                        //so that we can wrap around the array to find the corners
+            float avg =
+                    map[((x - halfSide + m_sideLength) % m_sideLength) + y * m_sideLength] + //left of center
+                    map[((x + halfSide) % m_sideLength) + y * m_sideLength] + //right of center
+                    map[x + ((y + halfSide) % m_sideLength) * m_sideLength] + //below center
+                    map[x + ((y - halfSide + m_sideLength) % m_sideLength) * m_sideLength]; //above center
+            avg /= 4.0f;
+
+                        //new value = average plus random offset
+                        //We calculate random value in range of 2h
+                        //and then subtract h so the end value is
+                        //in the range (-h, +h)
+            avg += RandomRange(-variation, variation, id.x, id.y, rndSeed);
+                        //update value for center of diamond
+            map[x + y * m_sideLength] = avg;
+
+                        //wrap values on the edges, remove
+                        //this and adjust loop condition above
+                        //for non-wrapping values.
+            if (x == 0)
+                map[m_sideLength - 1 + y * m_sideLength] = avg;
+            if (y == 0)
+                map[x + (m_sideLength - 1) * m_sideLength] = avg;
+        }
+    }
+}

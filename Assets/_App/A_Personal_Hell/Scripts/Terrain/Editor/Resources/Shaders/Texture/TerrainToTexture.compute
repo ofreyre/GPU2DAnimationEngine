@@ -1,0 +1,20 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+StructuredBuffer<float> map;
+uint sideLength;
+float min, max;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x < sideLength && id.y < sideLength)
+    {
+        float color = map[id.y * sideLength + id.x];
+        color = (color - min) / (max - min);
+        Result[id.xy] = float4(color, color, color, 1.0);
+    }
+}

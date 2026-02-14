@@ -15,9 +15,9 @@ Demo path: Assets/_App/Demo00/Scenes/SampleScene
 6. Assign the GPUAnimationData scriptable object instance to the Animation Data fiels of the RenderCtrl script.
 
 ## Demos
-GPUAnimationData custom inspector
+GPUAnimationData custom inspector  
 [![Anti tiling and tiles blending](https://img.youtube.com/vi/O4xx1kKgA30/0.jpg)](https://youtu.be/O4xx1kKgA30)  
 
-50 and 3000 instances of animated characters
+50 and 3000 instances of animated characters  
 [![Anti tiling and tiles blending](https://img.youtube.com/vi/WyjpnOaPc7E/0.jpg)](https://youtube.com/shorts/WyjpnOaPc7E)
 
